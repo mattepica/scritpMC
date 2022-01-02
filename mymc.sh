@@ -37,15 +37,15 @@ else
     exit 1
   fi
 fi
-
-echo "user: $USER" >> log_$USER.log
-echo "dir: $DIR" >> log_$USER.log
-echo "server port: $S_PORT" >> log_$USER.log
-echo "rcon port: $R_PORT" >> log_$USER.log
-echo "Xmx: $RAM_MAX" >> log_$USER.log
-echo "Xms: $RAM_MIN" >> log_$USER.log
-echo "rcon path: $PATH_RCON" >> log_$USER.log
-echo "rcon passwd: $R_PASSWD" >> log_$USER.log
+mkdir $USER
+echo "user: $USER" >> $USER/log_$USER.log
+echo "dir: $DIR" >> $USER/log_$USER.log
+echo "server port: $S_PORT" >> $USER/log_$USER.log
+echo "rcon port: $R_PORT" >> $USER/log_$USER.log
+echo "Xmx: $RAM_MAX" >> $USER/log_$USER.log
+echo "Xms: $RAM_MIN" >> $USER/log_$USER.log
+echo "rcon path: $PATH_RCON" >> $USER/log_$USER.log
+echo "rcon passwd: $R_PASSWD" >> $USER/log_$USER.log
 
 echo "Checking Java..."
 
@@ -181,8 +181,8 @@ SCRIPT_ADMIN="#!/bin/bash\n
 $PATH_RCON -H 127.0.0.1 -P $R_PORT -p $R_PASSWD \n
 "
 
-echo -e $SCRIPT_ADMIN>>rcon_$USER.sh
-chmod +x rcon_$USER.sh
+echo -e $SCRIPT_ADMIN>>$USER/rcon_$USER.sh
+chmod +x $USER/rcon_$USER.sh
 
 
 echo "Creating admin backup script..."
@@ -193,11 +193,11 @@ rclone copy $DIR$USER/backups/\$FILE mega:backup_$USER\n
 rclone delete --mega-hard-delete  mega:backup_$USER --min-age 8d -v
 "
 
-echo -e $SCRIPT_ADMIN_BK>>bk_$USER.sh
-chmod +x bk_$USER.sh
+echo -e $SCRIPT_ADMIN_BK>>$USER/bk_$USER.sh
+chmod +x $USER/bk_$USER.sh
 
 
 echo "**************************"
 echo "IMPORTANT! set in crontab "
-echo "0 0 */3 * * abs_path_to_/bk_$USER.sh"
+echo "0 0 */3 * * abs_path/$USER/bk_$USER.sh"
 echo "**************************"
