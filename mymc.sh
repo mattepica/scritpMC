@@ -20,8 +20,9 @@ then
   read -p 'Xmx : ' RAM_MAX
   read -p 'Xms : ' RAM_MIN
   read -p 'rcon path: ' PATH_RCON
+  read -p 'rcon pw : ' R_PASSWD
 else
-  if [[ $# -eq 7 ]] ;
+  if [[ $# -eq 8 ]] ;
   then
     USER=$1
     DIR=$2
@@ -30,8 +31,9 @@ else
     RAM_MAX=$5
     RAM_MIN=$6
     PATH_RCON=$7
+    R_PASSWD=$8
   else
-    echo "incorrect parms: <new user> <file dir> <server_p> <rcon_p> <XMX> <xms> <rcon_path>"
+    echo "incorrect parms: <new user> <file dir> <server_p> <rcon_p> <XMX> <xms> <rcon_path> <rcon_passwd>"
     exit 1
   fi
 fi
@@ -43,6 +45,7 @@ echo "rcon port: $R_PORT" >> log_$USER.log
 echo "Xmx: $RAM_MAX" >> log_$USER.log
 echo "Xms: $RAM_MIN" >> log_$USER.log
 echo "rcon path: $PATH_RCON" >> log_$USER.log
+echo "rcon passwd: $R_PASSWD" >> log_$USER.log
 
 echo "Checking Java..."
 
@@ -73,12 +76,12 @@ fi
 }
 
 
-echo "Checking Git..."
-check_installation "git"
-echo "Checking build-essential..."
-check_installation "build-essential"
-echo "Checking gcc..."
-check_installation "gcc"
+#echo "Checking Git..."
+#check_installation "git"
+#echo "Checking build-essential..."
+#check_installation "build-essential"
+#echo "Checking gcc..."
+#check_installation "gcc"
 
 
 echo "Creating new user..."
@@ -95,7 +98,7 @@ echo "creating backup script..."
 SCRPT_BACKUP="#!/bin/bash\n
 \n
 function rcon {\n
-\t$PATH_RCON -H 127.0.0.1 -P $R_PORT -p $USER \"\$1\"\n
+\t$PATH_RCON -H 127.0.0.1 -P $R_PORT -p $R_PASSWD \"\$1\"\n
 }\n
 \n
 rcon \"save-off\" \n
@@ -135,7 +138,7 @@ PrivateDevices=true\n
 NoNewPrivileges=true\n
 WorkingDirectory=$DIR$USER/server\n
 ExecStart=/usr/bin/java -Xmx$RAM_MAX -Xms$RAM_MIN -jar server.jar nogui\n
-ExecStop=$PATH_RCON -H 127.0.0.1 -P $R_PORT -p $USER stop\n
+ExecStop=$PATH_RCON -H 127.0.0.1 -P $R_PORT -p $R_PASSWD stop\n
 \n
 Restart=always\n
 [Install]\n
@@ -161,7 +164,7 @@ echo "Setting up server.properties file..."
 PROPERTIES="
 server-port=$S_PORT\n
 rcon.port=$R_PORT\n
-rcon.password=$USER\n
+rcon.password=$R_PASSWD\n
 enable-rcon=true\n
 "
 echo -e $PROPERTIES>tmp_prop
