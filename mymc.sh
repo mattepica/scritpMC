@@ -98,16 +98,19 @@ echo "creating backup script..."
 SCRPT_BACKUP="#!/bin/bash\n
 \n
 function rcon {\n
-\t$PATH_RCON -H 127.0.0.1 -P $R_PORT -p $R_PASSWD \"\$1\"\n
+\t $PATH_RCON -H 127.0.0.1 -P $R_PORT -p $R_PASSWD \"\$1\"\n
 }\n
 \n
+FILENAME=\"server-\"\$(date +%F-%H-%M)\".tar.gz\"\n
 rcon \"save-off\" \n
 rcon \"save-all\"\n
-tar -cvpzf $DIR$USER/backups/server-\$(date +%F-%H-%M).tar.gz $DIR$USER/server\n
+tar -cvpzf $DIR$USER/backups/\$FILENAME $DIR$USER/server\n
 rcon \"save-on\"\n
 \n
 ## Delete older backups\n
 find $DIR$USER/backups/ -type f -mtime +7 -name '*.gz' -delete\n
+rm $DIR$USER/backups/lastFile.dat\n
+echo \$FILENAME >> $DIR$USER/backups/lastFile.dat\n
 "
 
 echo -e $SCRPT_BACKUP>>tmp_file_back
