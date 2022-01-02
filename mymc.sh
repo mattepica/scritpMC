@@ -37,12 +37,12 @@ else
 fi
 
 echo "user: $USER" >> log_$USER.log
-echo "dir: $DIR" > log_$USER.log
-echo "server port: $S_PORT" > log_$USER.log
-echo "rcon port: $R_PORT" > log_$USER.log
-echo "Xmx: $RAM_MAX" > log_$USER.log
-echo "Xms: $RAM_MIN" > log_$USER.log
-echo "rcon path: $PATH_RCON" > log_$USER.log
+echo "dir: $DIR" >> log_$USER.log
+echo "server port: $S_PORT" >> log_$USER.log
+echo "rcon port: $R_PORT" >> log_$USER.log
+echo "Xmx: $RAM_MAX" >> log_$USER.log
+echo "Xms: $RAM_MIN" >> log_$USER.log
+echo "rcon path: $PATH_RCON" >> log_$USER.log
 
 echo "Checking Java..."
 
@@ -95,7 +95,7 @@ echo "creating backup script..."
 SCRPT_BACKUP="#!/bin/bash\n
 \n
 function rcon {\n
-\t$PATH_RCON -H 127.0.0.1 -P $R_PORT -p $USER\n
+\t$PATH_RCON -H 127.0.0.1 -P $R_PORT -p $USER \"\$1\"\n
 }\n
 \n
 rcon \"save-off\" \n
@@ -148,7 +148,7 @@ TMP=$(cat tmp_file_service)
 $SUDO cp tmp_file_service /etc/systemd/system/$USER.service
 rm tmp_file_service
 $SUDO systemctl daemon-reload
-$SUDO systemctl start $USER
+#$SUDO systemctl start $USER
 $SUDO systemctl enable $USER
 
 
@@ -158,7 +158,9 @@ $SUDO -H -u $USER bash -c "echo $EULA >> $DIR$USER/server/eula.txt"
 
 echo "Setting up server.properties file..."
 
-PROPERTIES="rcon.port=$R_PORT\n
+PROPERTIES="
+server-port=$S_PORT\n
+rcon.port=$R_PORT\n
 rcon.password=$USER\n
 enable-rcon=true\n
 "
