@@ -109,8 +109,7 @@ rcon \"save-on\"\n
 \n
 ## Delete older backups\n
 find $DIR$USER/backups/ -type f -mtime +7 -name '*.gz' -delete\n
-rm $DIR$USER/backups/lastFile.dat\n
-echo \$FILENAME >> $DIR$USER/backups/lastFile.dat\n
+echo \$FILENAME > $DIR$USER/backups/lastFile.dat\n
 "
 
 echo -e $SCRPT_BACKUP>>tmp_file_back
