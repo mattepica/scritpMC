@@ -173,3 +173,31 @@ echo -e $PROPERTIES>tmp_prop
 TMP=$(cat tmp_prop)
 $SUDO -u $USER bash -c "cp tmp_prop $DIR$USER/server/server.properties"
 rm tmp_prop
+
+
+echo "Creating admin script..."
+
+SCRIPT_ADMIN="#!/bin/bash\n
+$PATH_RCON -H 127.0.0.1 -P $R_PORT -p $R_PASSWD \n
+"
+
+echo -e $SCRIPT_ADMIN>>rcon_$USER.sh
+chmod +x rcon_$USER.sh
+
+
+echo "Creating admin backup script..."
+
+SCRIPT_ADMIN_BK="#!/bin/bash\n
+FILE=\$(<$DIR$USER/backups/lastFile.dat)\n
+rclone copy $DIR$USER/backups/\$FILE mega:backup_$USER\n
+rclone delete --mega-hard-delete  mega:backup_$USER --min-age 8d -v
+"
+
+echo -e $SCRIPT_ADMIN_BK>>bk_$USER.sh
+chmod +x bk_$USER.sh
+
+
+echo "**************************"
+echo "IMPORTANT! set in crontab "
+echo "0 0 */3 * * abs_path_to_/bk_$USER.sh"
+echo "**************************"
