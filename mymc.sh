@@ -36,6 +36,14 @@ else
   fi
 fi
 
+echo "user: $USER" >> log_$USER.log
+echo "dir: $DIR" > log_$USER.log
+echo "server port: $S_PORT" > log_$USER.log
+echo "rcon port: $R_PORT" > log_$USER.log
+echo "Xmx: $RAM_MAX" > log_$USER.log
+echo "Xms: $RAM_MIN" > log_$USER.log
+echo "rcon path: $PATH_RCON" > log_$USER.log
+
 echo "Checking Java..."
 
 if ! command -v java --version &> /dev/null
